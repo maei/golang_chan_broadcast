@@ -15,7 +15,7 @@ type Database struct {
 func (db *Database) Init(wg *sync.WaitGroup) chan []byte {
 	recCh := make(chan []byte)
 	db.Buffer = NewBuffer()
-	go db.Buffer.ConsumeBuffer(db.storeData, 1)
+	go db.Buffer.ConsumeBuffer(db.storeData, time.Millisecond*500)
 	go db.subscribe(recCh, wg)
 	return recCh
 }
@@ -38,5 +38,5 @@ func (db *Database) subscribe(ch chan []byte, wg *sync.WaitGroup) {
 
 func (db *Database) storeData(payload []byte) {
 	log.Println(fmt.Sprintf("data written to file:%v", payload))
-	time.Sleep(time.Second * 2)
+	time.Sleep(time.Second * 7)
 }

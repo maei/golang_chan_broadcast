@@ -36,7 +36,7 @@ func (b *buffer) ConsumeBuffer(fn func([]byte), timeout time.Duration) {
 			fn(b.Get())
 			b.Pop()
 		case true:
-			time.Sleep(time.Second * timeout)
+			time.Sleep(timeout)
 		}
 	}
 }

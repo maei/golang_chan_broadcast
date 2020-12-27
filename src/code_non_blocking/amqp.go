@@ -14,7 +14,7 @@ type AMQP struct {
 func (amqp *AMQP) Init(wg *sync.WaitGroup) chan []byte {
 	recCh := make(chan []byte)
 	amqp.Buffer = NewBuffer()
-	go amqp.Buffer.ConsumeBuffer(amqp.publishData, 5)
+	go amqp.Buffer.ConsumeBuffer(amqp.publishData, time.Second*1)
 	go amqp.subscribe(recCh, wg)
 	return recCh
 }
