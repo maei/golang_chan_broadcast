@@ -4,29 +4,30 @@ import (
 	"sync"
 )
 
+type HandlerInterface interface {
+	ListenToAdapter()
+}
+
 type Handler struct {
-	Receiver     []ReceiverInterface
+	Receiver     []*ReceiverNode
 	ReceiverChan []chan []byte
 	Data         chan []byte
 	Wg           sync.WaitGroup
-}
-
-type HandlerInterface interface {
-	ListenToAdapter()
 }
 
 func NewHandler(newReceiver []string, data chan []byte) *Handler {
 	h := &Handler{
 		Data: data,
 	}
+
 	for _, v := range newReceiver {
-		h.Receiver = append(h.Receiver, ReceiverFactory(v))
+		h.Receiver = append(h.Receiver, ReceiverNodeFactory(v))
 	}
 
 	h.Wg.Add(len(h.Receiver) + 1)
 
 	for _, t := range h.Receiver {
-		h.ReceiverChan = append(h.ReceiverChan, t.Init(&h.Wg))
+		h.ReceiverChan = append(h.ReceiverChan, t.InitReceiverNode(&h.Wg))
 	}
 
 	return h
