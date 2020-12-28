@@ -9,25 +9,25 @@ type HandlerInterface interface {
 }
 
 type Handler struct {
-	Receiver     []*ReceiverNode
-	ReceiverChan []chan []byte
-	Data         chan []byte
-	Wg           sync.WaitGroup
+	ReceiverNodes     []*ReceiverNode
+	ReceiverNodesChan []chan []byte
+	DataUpstream      chan []byte
+	Wg                sync.WaitGroup
 }
 
-func NewHandler(newReceiver []string, data chan []byte) *Handler {
+func NewHandler(newReceiverModes []string, upstreamData chan []byte) *Handler {
 	h := &Handler{
-		Data: data,
+		DataUpstream: upstreamData,
 	}
 
-	for _, v := range newReceiver {
-		h.Receiver = append(h.Receiver, ReceiverNodeFactory(v))
+	for _, v := range newReceiverModes {
+		h.ReceiverNodes = append(h.ReceiverNodes, ReceiverNodeFactory(v))
 	}
 
-	h.Wg.Add(len(h.Receiver) + 1)
+	h.Wg.Add(len(h.ReceiverNodes) + 1)
 
-	for _, t := range h.Receiver {
-		h.ReceiverChan = append(h.ReceiverChan, t.InitReceiverNode(&h.Wg))
+	for _, t := range h.ReceiverNodes {
+		h.ReceiverNodesChan = append(h.ReceiverNodesChan, t.InitReceiverNode(&h.Wg))
 	}
 
 	return h
@@ -36,13 +36,13 @@ func NewHandler(newReceiver []string, data chan []byte) *Handler {
 func (h *Handler) ListenToAdapter() {
 	for {
 		select {
-		case data, open := <-h.Data:
+		case data, open := <-h.DataUpstream:
 			if open {
-				for _, x := range h.ReceiverChan {
+				for _, x := range h.ReceiverNodesChan {
 					x <- data
 				}
 			} else {
-				for _, z := range h.ReceiverChan {
+				for _, z := range h.ReceiverNodesChan {
 					close(z)
 				}
 				h.Wg.Done()

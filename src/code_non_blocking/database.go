@@ -18,7 +18,7 @@ func NewDatabase() DatabaseInterface {
 	return &Database{}
 }
 
-func (db *Database) StoreData(payload []byte) {
-	log.Println(fmt.Sprintf("data written to file:%v", payload))
+func (db *Database) StoreData(dataUpstream []byte) {
+	log.Println(fmt.Sprintf("data written to file:%v", dataUpstream))
 	time.Sleep(time.Second * 4)
 }

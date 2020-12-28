@@ -27,8 +27,8 @@ func NewBuffer() Buffer {
 	}
 }
 
-/*callback function to observe changes in buffer
-Consume data in FIFO and deletes consumed entry after it was computed*/
+// callback function to observe changes in buffer
+// Consumes data in FIFO and deletes consumed entry after it was computed*/
 func (b *buffer) ConsumeBuffer(fn func([]byte), timeout time.Duration) {
 	for {
 		switch b.IsEmpty() {

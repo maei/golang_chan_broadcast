@@ -17,8 +17,8 @@ func NewAmqp() AmqpInterface {
 	return &AMQP{}
 }
 
-func (amqp *AMQP) PublishData(payload []byte) {
-	log.Printf("publish data over amqp: %v", payload)
+func (amqp *AMQP) PublishData(dataUpstream []byte) {
+	log.Printf("publish data over amqp: %v", dataUpstream)
 	time.Sleep(time.Second * 1)
 
 }

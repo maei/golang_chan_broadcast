@@ -9,6 +9,7 @@ import (
 
 type ReceiverInterface interface {
 	InitReceiverNode(wg *sync.WaitGroup) chan []byte
+	subscribe(ch chan []byte, wg *sync.WaitGroup)
 }
 
 /// ReceiverNode
@@ -21,22 +22,22 @@ type ReceiverNode struct {
 	Timeout               time.Duration
 }
 
-func ReceiverNodeFactory(receiverName string) *ReceiverNode {
-	if receiverName == "AMQP" {
+func ReceiverNodeFactory(receiverNodeName string) *ReceiverNode {
+	if receiverNodeName == "AMQP" {
 		rn := &ReceiverNode{
 			ProcessID:             uuid.New(),
 			ReceiverNodeInterface: NewAmqp(),
-			ReceiverNodeName:      "AMQP",
+			ReceiverNodeName:      receiverNodeName,
 			Timeout:               time.Millisecond * 500,
 		}
 		rn.Callback = rn.ReceiverNodeInterface.(*AMQP).PublishData
 		return rn
 	}
-	if receiverName == "DATABASE" {
+	if receiverNodeName == "DATABASE" {
 		rn := &ReceiverNode{
 			ProcessID:             uuid.New(),
 			ReceiverNodeInterface: NewDatabase(),
-			ReceiverNodeName:      "DATABASE",
+			ReceiverNodeName:      receiverNodeName,
 			Timeout:               time.Millisecond * 500,
 		}
 		rn.Callback = rn.ReceiverNodeInterface.(*Database).StoreData
