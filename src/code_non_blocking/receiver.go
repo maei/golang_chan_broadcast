@@ -1,6 +1,8 @@
 package code_non_blocking
 
 import (
+	"errors"
+	"fmt"
 	"github.com/google/uuid"
 	"log"
 	"sync"
@@ -22,7 +24,7 @@ type ReceiverNode struct {
 	Timeout               time.Duration
 }
 
-func ReceiverNodeFactory(receiverNodeName string) *ReceiverNode {
+func ReceiverNodeFactory(receiverNodeName string) (*ReceiverNode, error) {
 	if receiverNodeName == "AMQP" {
 		rn := &ReceiverNode{
 			ProcessID:             uuid.New(),
@@ -31,7 +33,7 @@ func ReceiverNodeFactory(receiverNodeName string) *ReceiverNode {
 			Timeout:               time.Millisecond * 500,
 		}
 		rn.Callback = rn.ReceiverNodeInterface.(*AMQP).PublishData
-		return rn
+		return rn, nil
 	}
 	if receiverNodeName == "DATABASE" {
 		rn := &ReceiverNode{
@@ -41,9 +43,9 @@ func ReceiverNodeFactory(receiverNodeName string) *ReceiverNode {
 			Timeout:               time.Millisecond * 500,
 		}
 		rn.Callback = rn.ReceiverNodeInterface.(*Database).StoreData
-		return rn
+		return rn, nil
 	}
-	return &ReceiverNode{}
+	return &ReceiverNode{}, errors.New(fmt.Sprintf("receiver: %v not known", receiverNodeName))
 }
 
 func (rec *ReceiverNode) InitReceiverNode(wg *sync.WaitGroup) chan []byte {

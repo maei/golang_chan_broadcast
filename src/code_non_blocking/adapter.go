@@ -19,7 +19,7 @@ func NewAdapter() adapterInterface {
 // If the channel is unbuffered, the sender blocks until the receiver has received the value.
 func (a *adapter) ReceiveData() {
 	dataChannel := make(chan []byte)
-	receiver := []string{"AMQP", "DATABASE"}
+	receiver := []string{"AMQP", "DATABASE", "asdasd"}
 
 	handler := NewHandler(receiver, dataChannel)
 	go handler.ListenToAdapter()

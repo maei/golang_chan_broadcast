@@ -1,6 +1,7 @@
 package code_non_blocking
 
 import (
+	"log"
 	"sync"
 )
 
@@ -21,7 +22,12 @@ func NewHandler(newReceiverModes []string, upstreamData chan []byte) *Handler {
 	}
 
 	for _, val := range newReceiverModes {
-		handler.ReceiverNodes = append(handler.ReceiverNodes, ReceiverNodeFactory(val))
+		node, nErr := ReceiverNodeFactory(val)
+		if nErr != nil {
+			log.Println(nErr)
+		} else {
+			handler.ReceiverNodes = append(handler.ReceiverNodes, node)
+		}
 	}
 
 	handler.Wg.Add(len(handler.ReceiverNodes) + 1)
