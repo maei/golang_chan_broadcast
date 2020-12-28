@@ -16,21 +16,21 @@ type Handler struct {
 }
 
 func NewHandler(newReceiverModes []string, upstreamData chan []byte) *Handler {
-	h := &Handler{
+	handler := &Handler{
 		DataUpstream: upstreamData,
 	}
 
-	for _, v := range newReceiverModes {
-		h.ReceiverNodes = append(h.ReceiverNodes, ReceiverNodeFactory(v))
+	for _, val := range newReceiverModes {
+		handler.ReceiverNodes = append(handler.ReceiverNodes, ReceiverNodeFactory(val))
 	}
 
-	h.Wg.Add(len(h.ReceiverNodes) + 1)
+	handler.Wg.Add(len(handler.ReceiverNodes) + 1)
 
-	for _, t := range h.ReceiverNodes {
-		h.ReceiverNodesChan = append(h.ReceiverNodesChan, t.InitReceiverNode(&h.Wg))
+	for _, val := range handler.ReceiverNodes {
+		handler.ReceiverNodesChan = append(handler.ReceiverNodesChan, val.InitReceiverNode(&handler.Wg))
 	}
 
-	return h
+	return handler
 }
 
 func (h *Handler) ListenToAdapter() {
