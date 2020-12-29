@@ -36,7 +36,9 @@ func (b *byteBuffer) ConsumeBuffer(fn func([]byte), timeout time.Duration) {
 		case true:
 			time.Sleep(timeout)
 		case false:
+			// sync function call
 			fn(b.Get())
+			// deletes element which was consumed by the receiver function
 			b.Pop()
 			//fmt.Printf("buffer size: %v\n", b.List.Len())
 		}
