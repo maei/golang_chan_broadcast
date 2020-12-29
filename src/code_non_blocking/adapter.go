@@ -7,30 +7,29 @@ import (
 
 type adapter struct{}
 
-type adapterInterface interface {
+type AdapterInterface interface {
 	ReceiveData()
 }
 
-func NewAdapter() adapterInterface {
+func NewAdapter() AdapterInterface {
 	return &adapter{}
 }
 
 // Receivers always block until there is data to receive.
 // If the channel is unbuffered, the sender blocks until the receiver has received the value.
 func (a *adapter) ReceiveData() {
-	dataChannel := make(chan []byte)
 	receiver := []string{"AMQP", "DATABASE", "asdasd"}
 
-	handler := NewHandler(receiver, dataChannel)
+	handler := NewHandler(receiver)
 	go handler.ListenToAdapter()
 
 	go func() {
 		for i := 0; i <= 10; i++ {
 			b := []byte(strconv.Itoa(i))
-			dataChannel <- b
+			handler.DataUpstream <- b
 			fmt.Println(b)
 		}
-		close(dataChannel)
+		close(handler.DataUpstream)
 	}()
 
 	handler.Wg.Wait()

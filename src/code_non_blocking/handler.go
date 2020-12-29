@@ -16,9 +16,9 @@ type Handler struct {
 	Wg                sync.WaitGroup
 }
 
-func NewHandler(newReceiverModes []string, upstreamData chan []byte) *Handler {
+func NewHandler(newReceiverModes []string) *Handler {
 	handler := &Handler{
-		DataUpstream: upstreamData,
+		DataUpstream: make(chan []byte),
 	}
 
 	for _, val := range newReceiverModes {
