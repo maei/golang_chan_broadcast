@@ -33,11 +33,11 @@ func NewBuffer() ByteBuffer {
 func (b *byteBuffer) ConsumeBuffer(fn func([]byte), timeout time.Duration) {
 	for {
 		switch b.IsEmpty() {
+		case true:
+			time.Sleep(timeout)
 		case false:
 			fn(b.Get())
 			b.Pop()
-		case true:
-			time.Sleep(timeout)
 		}
 	}
 }
@@ -65,6 +65,8 @@ func (b *byteBuffer) Get() []byte {
 
 // Delete the whole Linked List
 func (b *byteBuffer) Clear() {
+	b.Mutex.Lock()
+	defer b.Mutex.Unlock()
 	b.List.Init()
 }
 
