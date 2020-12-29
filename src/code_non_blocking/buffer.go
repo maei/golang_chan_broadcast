@@ -20,6 +20,7 @@ type byteBuffer struct {
 	Mutex sync.Mutex
 }
 
+// Implements a double linked list
 func NewBuffer() ByteBuffer {
 	return &byteBuffer{
 		List:  list.New(),

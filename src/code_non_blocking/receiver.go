@@ -14,7 +14,6 @@ type ReceiverInterface interface {
 	subscribe(ch chan []byte, wg *sync.WaitGroup)
 }
 
-/// ReceiverNode
 type ReceiverNode struct {
 	ProcessID             uuid.UUID
 	ReceiverNodeName      string

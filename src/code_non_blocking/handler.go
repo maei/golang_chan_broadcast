@@ -16,12 +16,12 @@ type UpstreamHandler struct {
 	Wg                sync.WaitGroup
 }
 
-func NewUpstreamHandler(newReceiverModes []string) *UpstreamHandler {
+func NewUpstreamHandler(receiverNodes []string) *UpstreamHandler {
 	handler := &UpstreamHandler{
 		DataUpstream: make(chan []byte),
 	}
 
-	for _, val := range newReceiverModes {
+	for _, val := range receiverNodes {
 		node, nErr := ReceiverNodeFactory(val)
 		if nErr != nil {
 			log.Println(nErr)
