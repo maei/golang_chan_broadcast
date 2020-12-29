@@ -20,8 +20,8 @@ func NewAdapter() AdapterInterface {
 func (a *adapter) ReceiveData() {
 	receiver := []string{"AMQP", "DATABASE", "asdasd"}
 
-	handler := NewHandler(receiver)
-	go handler.ListenToAdapter()
+	handler := NewUpstreamHandler(receiver)
+	go handler.ListenToUpstream()
 
 	go func() {
 		for i := 0; i <= 10; i++ {

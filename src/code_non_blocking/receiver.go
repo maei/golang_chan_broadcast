@@ -18,7 +18,7 @@ type ReceiverInterface interface {
 type ReceiverNode struct {
 	ProcessID             uuid.UUID
 	ReceiverNodeName      string
-	Buffer                Buffer
+	Buffer                ByteBuffer
 	Callback              func([]byte)
 	ReceiverNodeInterface interface{}
 	Timeout               time.Duration

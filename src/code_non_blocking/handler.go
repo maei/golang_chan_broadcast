@@ -5,19 +5,19 @@ import (
 	"sync"
 )
 
-type HandlerInterface interface {
-	ListenToAdapter()
+type UpstreamHandlerInterface interface {
+	ListenToUpstream()
 }
 
-type Handler struct {
+type UpstreamHandler struct {
 	ReceiverNodes     []*ReceiverNode
 	ReceiverNodesChan []chan []byte
 	DataUpstream      chan []byte
 	Wg                sync.WaitGroup
 }
 
-func NewHandler(newReceiverModes []string) *Handler {
-	handler := &Handler{
+func NewUpstreamHandler(newReceiverModes []string) *UpstreamHandler {
+	handler := &UpstreamHandler{
 		DataUpstream: make(chan []byte),
 	}
 
@@ -39,7 +39,7 @@ func NewHandler(newReceiverModes []string) *Handler {
 	return handler
 }
 
-func (h *Handler) ListenToAdapter() {
+func (h *UpstreamHandler) ListenToUpstream() {
 	for {
 		select {
 		case data, open := <-h.DataUpstream:

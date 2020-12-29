@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type Buffer interface {
+type ByteBuffer interface {
 	Add(value []byte)
 	Get() []byte
 	Clear()
@@ -15,21 +15,21 @@ type Buffer interface {
 	ConsumeBuffer(f func([]byte), timeout time.Duration)
 }
 
-type buffer struct {
+type byteBuffer struct {
 	List  *list.List
 	Mutex sync.Mutex
 }
 
-func NewBuffer() Buffer {
-	return &buffer{
+func NewBuffer() ByteBuffer {
+	return &byteBuffer{
 		List:  list.New(),
 		Mutex: sync.Mutex{},
 	}
 }
 
-// callback function to observe changes in buffer
+// callback function to observe changes in byteBuffer
 // Consumes data in FIFO and deletes consumed entry after it was computed*/
-func (b *buffer) ConsumeBuffer(fn func([]byte), timeout time.Duration) {
+func (b *byteBuffer) ConsumeBuffer(fn func([]byte), timeout time.Duration) {
 	for {
 		switch b.IsEmpty() {
 		case false:
@@ -42,33 +42,33 @@ func (b *buffer) ConsumeBuffer(fn func([]byte), timeout time.Duration) {
 }
 
 // Puts a new Value to the End of the Linked List
-func (b *buffer) Add(value []byte) {
+func (b *byteBuffer) Add(value []byte) {
 	b.Mutex.Lock()
 	defer b.Mutex.Unlock()
 	_ = b.List.PushBack(value)
 }
 
 // Deletes the first Value in the Linked List
-func (b *buffer) Pop() {
+func (b *byteBuffer) Pop() {
 	b.Mutex.Lock()
 	defer b.Mutex.Unlock()
 	b.List.Remove(b.List.Front())
 }
 
 // Get the first Value of the Linked List
-func (b *buffer) Get() []byte {
+func (b *byteBuffer) Get() []byte {
 	b.Mutex.Lock()
 	defer b.Mutex.Unlock()
 	return b.List.Front().Value.([]byte)
 }
 
 // Delete the whole Linked List
-func (b *buffer) Clear() {
+func (b *byteBuffer) Clear() {
 	b.List.Init()
 }
 
 // Check if Linked List is Empty
-func (b *buffer) IsEmpty() bool {
+func (b *byteBuffer) IsEmpty() bool {
 	b.Mutex.Lock()
 	defer b.Mutex.Unlock()
 	return b.List.Len() == 0
