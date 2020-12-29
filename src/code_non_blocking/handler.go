@@ -16,9 +16,9 @@ type UpstreamHandler struct {
 	Wg                sync.WaitGroup
 }
 
-func NewUpstreamHandler(receiverNodes []string) *UpstreamHandler {
+func NewUpstreamHandler(receiverNodes []string, bufferSize int8) *UpstreamHandler {
 	handler := &UpstreamHandler{
-		DataUpstream: make(chan []byte),
+		DataUpstream: make(chan []byte, bufferSize),
 	}
 
 	for _, val := range receiverNodes {
@@ -33,7 +33,7 @@ func NewUpstreamHandler(receiverNodes []string) *UpstreamHandler {
 	handler.Wg.Add(len(handler.ReceiverNodes) + 1)
 
 	for _, val := range handler.ReceiverNodes {
-		handler.ReceiverNodesChan = append(handler.ReceiverNodesChan, val.InitReceiverNode(&handler.Wg))
+		handler.ReceiverNodesChan = append(handler.ReceiverNodesChan, val.InitReceiverNode(&handler.Wg, bufferSize))
 	}
 
 	return handler

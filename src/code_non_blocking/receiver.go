@@ -47,8 +47,8 @@ func ReceiverNodeFactory(receiverNodeName string) (*ReceiverNode, error) {
 	return &ReceiverNode{}, errors.New(fmt.Sprintf("receiver: %v not known", receiverNodeName))
 }
 
-func (rec *ReceiverNode) InitReceiverNode(wg *sync.WaitGroup) chan []byte {
-	recCh := make(chan []byte)
+func (rec *ReceiverNode) InitReceiverNode(wg *sync.WaitGroup, bufferSize int8) chan []byte {
+	recCh := make(chan []byte, bufferSize)
 	rec.Buffer = NewBuffer()
 	go rec.Buffer.ConsumeBuffer(rec.Callback, rec.Timeout)
 	go rec.subscribe(recCh, wg)

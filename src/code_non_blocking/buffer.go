@@ -38,6 +38,7 @@ func (b *byteBuffer) ConsumeBuffer(fn func([]byte), timeout time.Duration) {
 		case false:
 			fn(b.Get())
 			b.Pop()
+			//fmt.Printf("buffer size: %v\n", b.List.Len())
 		}
 	}
 }
