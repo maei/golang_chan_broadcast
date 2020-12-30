@@ -33,7 +33,7 @@ func NewUpstreamHandler(receiverNodes []string, bufferSize int8) *UpstreamHandle
 	handler.Wg.Add(len(handler.ReceiverNodes) + 1)
 
 	for _, val := range handler.ReceiverNodes {
-		handler.ReceiverNodesChan = append(handler.ReceiverNodesChan, val.InitReceiverNode(&handler.Wg, bufferSize))
+		handler.ReceiverNodesChan = append(handler.ReceiverNodesChan, val.InitReceiverNode(&handler.Wg))
 	}
 
 	return handler

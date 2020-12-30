@@ -2,7 +2,6 @@ package code_non_blocking
 
 import (
 	"log"
-	"time"
 )
 
 /// AQMP
@@ -19,6 +18,6 @@ func NewAmqp() AmqpInterface {
 
 func (amqp *AMQP) PublishData(dataUpstream []byte) {
 	log.Printf("publish data over amqp: %v", dataUpstream)
-	time.Sleep(time.Second * 1)
+	//time.Sleep(time.Second * 1)
 
 }

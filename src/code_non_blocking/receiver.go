@@ -21,6 +21,7 @@ type ReceiverNode struct {
 	Callback              func([]byte)
 	ReceiverNodeInterface interface{}
 	Timeout               time.Duration
+	BufferSize            int16
 }
 
 func ReceiverNodeFactory(receiverNodeName string) (*ReceiverNode, error) {
@@ -30,6 +31,7 @@ func ReceiverNodeFactory(receiverNodeName string) (*ReceiverNode, error) {
 			ReceiverNodeInterface: NewAmqp(),
 			ReceiverNodeName:      receiverNodeName,
 			Timeout:               time.Millisecond * 500,
+			BufferSize:            10,
 		}
 		rn.Callback = rn.ReceiverNodeInterface.(*AMQP).PublishData
 		return rn, nil
@@ -40,6 +42,7 @@ func ReceiverNodeFactory(receiverNodeName string) (*ReceiverNode, error) {
 			ReceiverNodeInterface: NewDatabase(),
 			ReceiverNodeName:      receiverNodeName,
 			Timeout:               time.Millisecond * 500,
+			BufferSize:            10,
 		}
 		rn.Callback = rn.ReceiverNodeInterface.(*Database).StoreData
 		return rn, nil
@@ -47,8 +50,8 @@ func ReceiverNodeFactory(receiverNodeName string) (*ReceiverNode, error) {
 	return &ReceiverNode{}, errors.New(fmt.Sprintf("receiver: %v not known", receiverNodeName))
 }
 
-func (rec *ReceiverNode) InitReceiverNode(wg *sync.WaitGroup, bufferSize int8) chan []byte {
-	recCh := make(chan []byte, bufferSize)
+func (rec *ReceiverNode) InitReceiverNode(wg *sync.WaitGroup) chan []byte {
+	recCh := make(chan []byte, rec.BufferSize)
 	rec.Buffer = NewBuffer()
 	go rec.Buffer.ConsumeBuffer(rec.Callback, rec.Timeout)
 	go rec.subscribe(recCh, wg)

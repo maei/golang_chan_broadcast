@@ -3,7 +3,6 @@ package code_non_blocking
 import (
 	"fmt"
 	"log"
-	"time"
 )
 
 /// DATABASE
@@ -20,5 +19,5 @@ func NewDatabase() DatabaseInterface {
 
 func (db *Database) StoreData(dataUpstream []byte) {
 	log.Println(fmt.Sprintf("data written to file:%v", dataUpstream))
-	time.Sleep(time.Second * 4)
+	//time.Sleep(time.Second * 4)
 }

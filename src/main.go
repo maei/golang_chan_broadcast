@@ -19,4 +19,5 @@ func main() {
 	c.ReceiveData()
 
 	time.Sleep(time.Second * 40)
+
 }
